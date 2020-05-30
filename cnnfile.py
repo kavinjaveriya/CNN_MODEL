@@ -4,14 +4,14 @@ from keras.layers import Flatten
 from keras.layers import Dense
 from keras.models import Sequential
 model = Sequential()
-model.add(Convolution2D(filters=64, 
+model.add(Convolution2D(filters=128, 
                         kernel_size=(3,3), 
                         activation='relu',
                    input_shape=(64, 64, 3)
                        ))
 
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Convolution2D(filters=32, 
+model.add(Convolution2D(filters=64, 
                         kernel_size=(3,3), 
                         activation='relu',
                    input_shape=(64, 64, 3)
@@ -31,19 +31,17 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 from keras_preprocessing.image import ImageDataGenerator
 traingen = ImageDataGenerator(rescale=1./255 , zoom_range=0.2 , horizontal_flip=True ,  vertical_flip=True )
 testgen = ImageDataGenerator(rescale=1./255)
-trainset = traingen.flow_from_directory("/MLOPS/cnn_dataset/training_set" , target_size=(64,64) , batch_size=32 , class_mode='categorical' )
-testset = testgen.flow_from_directory("/MLOPS/cnn_dataset/test_set/" , target_size=(64,64) , batch_size=32 , class_mode='categorical' )
-history=model.fit(trainset , epochs=2 , validation_data=testset , steps_per_epoch=9259, validation_steps=10  )
+trainset = traingen.flow_from_directory('/MLOPS/cnn_dataset/training_set/' , target_size=(64,64) , batch_size=32 , class_mode='categorical' )
+testset = testgen.flow_from_directory('/MLOPS/cnn_dataset/test_set/' , target_size=(64,64) , batch_size=32 , class_mode='categorical' )
+model.fit(trainset , epochs=5 , validation_data=testset , steps_per_epoch=9259, validation_steps=10  )
 model.save("cnnmlops.h5")
 scores = model.evaluate(testset,verbose=1)
 print('loss',scores[0])
-print('acc',scores[1]
-acc = history.history['accuracy']
-accuracy = acc[1]*100
-file = open("/MLOPS/accuracy.txt",'w')
-file.write(accuracy)
-file.close("/MLOPS/accuracy.txt")
-
+print('acc',scores[1])
+acc=scores[1]*100
+file = open("/MLOPS/accuracy.txt", "w")
+f.write(str(acc))
+f.close()
 
 
 
